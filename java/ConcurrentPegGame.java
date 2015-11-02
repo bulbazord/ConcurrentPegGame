@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class ConcurrentPegGame {
 
     public int rows;
@@ -6,8 +8,18 @@ public class ConcurrentPegGame {
         this.rows = rows;
     }
 
+    /**
+     * The initial method to begin finding a solution.
+     * Calculates the number of pegs (the nth triangular number).
+     * Creates the board with the appropriate number of pegs.
+     * Then tries to solve it by trying each starting configuration.
+     */
     public void solve() {
-        System.out.println("Solving!");
+        int numberOfPegs = (rows * (rows + 1)) / 2;
+        boolean[] pegs = new boolean[numberOfPegs];
+        Arrays.fill(pegs, false);
+
+        // Do the parallel thing here
     }
 
     public static void usage() {
