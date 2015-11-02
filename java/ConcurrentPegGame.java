@@ -1,4 +1,6 @@
-import java.util.Arrays;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 public class ConcurrentPegGame {
 
@@ -16,10 +18,12 @@ public class ConcurrentPegGame {
      */
     public void solve() {
         int numberOfPegs = (rows * (rows + 1)) / 2;
-        boolean[] pegs = new boolean[numberOfPegs];
-        Arrays.fill(pegs, false);
-
-        // Do the parallel thing here
+        ExecutorService boardSolverPool = Executors.newFixedThreadPool(5);
+        for (int i = 0; i < numberOfPegs; i++) {
+            BoardSolver bs = new BoardSolver(i, numberOfPegs);
+            boardSolverPool.submit(bs);
+        }
+        boardSolverPool.shutdown();
     }
 
     public static void usage() {

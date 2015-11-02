@@ -1,0 +1,3 @@
+Create another object called "BestMoveTracker" containing a stack of the current 
+best move list and the number of moves (stack size). To compare moves, you should be able to
+compare based on the sizes. The minimum number of moves, the better.
