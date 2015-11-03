@@ -15,7 +15,8 @@ public class ConcurrentPegGame {
         this.rows = rows;
     }
 
-    /**  The initial method to begin finding a solution.
+    /**
+     * The initial method to begin finding a solution.
      * First we calculate the number of pegs and create a thread pool.
      * I had been suggested to do a multiple of the number of available
      * processors, and experimentally I found 1x would be best.

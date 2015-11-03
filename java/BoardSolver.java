@@ -31,6 +31,12 @@ public class BoardSolver implements Callable<LinkedList<Move>> {
         this.moves = new LinkedList<Move>();
     }
     
+    /**
+     * The method that the thread starts by executing.
+     *  Applies the first move, recursively solves, returns best moves.
+     *
+     *  @return A linkedlist, treated as a stack, representing the best moves.
+     */
     public LinkedList<Move> call() {
         Move move = new Move(initialPeg, initialPeg, initialPeg);
         applyMove(move);
@@ -38,6 +44,14 @@ public class BoardSolver implements Callable<LinkedList<Move>> {
         return this.bestMoves;
     }
 
+    /**
+     * A method to get the peg number based on the row and displacement.
+     *
+     * @param row The row of the peg
+     * @param displacement The displacement in the row
+     *
+     * @return The peg number
+     */
     public int getPegNumber(int row, int displacement) {
         if (row < 0 || row >= TOTAL_PEGS_TABLE.length || displacement < 0 ||
                 displacement > row) {
@@ -46,16 +60,36 @@ public class BoardSolver implements Callable<LinkedList<Move>> {
         return TOTAL_PEGS_TABLE[row] + displacement;
     }
 
+    /**
+     * Method to find the row of a peg based on the peg number.
+     *
+     * @param currentPeg The current peg's number
+     *
+     * @return The row of the current peg.
+     */
     public int getRow(int currentPeg) {
         int i;
         for (i = 0; TOTAL_PEGS_TABLE[i] <= currentPeg; i++);
         return i - 1;
     }
 
+    /**
+     * Method to find displacement of a peg within a row
+     *
+     * @param currentPeg The current peg's number
+     *
+     * @return The displacement of a peg within a row
+     */
     public int getDisplacement(int currentPeg) {
         return currentPeg - TOTAL_PEGS_TABLE[getRow(currentPeg)];
     }
 
+    /**
+     * Method that applies a move to the board of pegs.
+     *
+     * @param move The move to be applied.
+     *
+     */
     public void applyMove(Move move) {
         board[move.originalPosition]    = false;
         board[move.newPosition]         = true;
@@ -64,6 +98,11 @@ public class BoardSolver implements Callable<LinkedList<Move>> {
         moves.push(move);
     }
 
+    /**
+     * The move to undo.
+     *
+     * @param move The move to undo
+     */
     public void reverseMove(Move move) {
         board[move.originalPosition]    = true;
         board[move.newPosition]         = false;
@@ -72,6 +111,12 @@ public class BoardSolver implements Callable<LinkedList<Move>> {
         moves.pop();
     }
 
+    /**
+     * Method that takes a move that was made and tries to check every possible
+     * move that can be made based on the current state of the board.
+     *
+     * @param previousMove The last move that was made.
+     */
     public void recursiveSolve(Move previousMove) {
         if (numberOfPegs > currentBest) {
             boolean validMove = false;
@@ -93,6 +138,13 @@ public class BoardSolver implements Callable<LinkedList<Move>> {
         reverseMove(previousMove);
     }
 
+    /**
+     * Method that test the potential moves around a given peg.
+     *
+     * @param currentPeg The peg to move
+     *
+     * @return True if the peg has moves. False otherwise.
+     */
     public boolean testNeighborMoves(int currentPeg) {
         boolean validMove = false;
 
@@ -128,6 +180,15 @@ public class BoardSolver implements Callable<LinkedList<Move>> {
         return validMove;
     }
 
+    /**
+     * Method to check for an apply moves.
+     *
+     * @param current The location where the peg is.
+     * @param next The location where the peg will be.
+     * @param jump The location that is being jumped over.
+     *
+     * @return True if the the move is valid. False otherwise.
+     */
     public boolean testAndApply(int current, int next, int jump) {
         Move move = new Move(current, next, jump);
         if (testMove(move)) {
@@ -138,6 +199,13 @@ public class BoardSolver implements Callable<LinkedList<Move>> {
         return false;
     }
 
+    /**
+     * Method to check the validity of a move.
+     *
+     * @param move The move to check.
+     *
+     * @return True if the move is valid. False otherwise.
+     */
     public boolean testMove(Move move) {
         int lR = getRow(move.newPosition);
         if (lR < 0 || lR >= numberOfRows) {
