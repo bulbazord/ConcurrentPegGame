@@ -10,10 +10,10 @@ public class Move {
     }
 
     public String toString() {
-        return "(" + this.originalPosition + ", " + this.newPosition + ")";
+        return "(" + (this.originalPosition+1) + ", " + (this.newPosition+1) + ")";
     }
 
-    public boolean equals(object move) {
+    public boolean equals(Object move) {
         if (move == null) return false;
         if (move == this) return true;
         if (!(move instanceof Move)) return false;
