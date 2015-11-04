@@ -1,0 +1,16 @@
+Dependencies: 
+
+Parallel haskell package
+Use cabal to install
+
+To build:
+
+./build.sh
+
+To run:
+
+./ConcurrentPegGame -s <rows> +RTS -N4
+
+To clean:
+
+./build clean
