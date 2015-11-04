@@ -53,25 +53,29 @@ public class ConcurrentPegGame {
         // Find best result among the threads.
         int min = -1;
         LinkedList<Move> best = null;
+        int index = -1;
         try {
             best = results.get(0).get();
             min = best.size();
+            index = 0;
             for (int i = 0; i < maxPegsToCheck; i++) {
                 LinkedList<Move> res = results.get(i).get();
                 res.pop(); // Get rid of the first "move", which is the removal of the first peg
                 if (res.size() < min) {
                     best = res;
                     min = best.size();
+                    index = i;
                 }
             }
         } catch (Exception e) {
             min = -1;
             best = null;
+            index = -1;
         }
 
         // Print out best result
         if (best != null) {
-            System.out.println("(" + (numberOfPegs - 1 - best.size()) + ", " + (min + 1) + ")");
+            System.out.println("(" + (index + 1) + ", " + min + ")");
             for (Move move : best) {
                 System.out.println(move);
             }
