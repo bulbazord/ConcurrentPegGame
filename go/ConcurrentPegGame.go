@@ -64,6 +64,9 @@ type boardState struct {
 
 }
 
+/*
+ * Gets a peg number based on it's row and displacement within the row
+ */
 func GetPegNumber(row, disp int) int {
 	if row < 0 || row >= len(TOTAL_PEGS_TABLE) || disp < 0 || disp > row {
 		return -1
@@ -71,6 +74,9 @@ func GetPegNumber(row, disp int) int {
 	return TOTAL_PEGS_TABLE[row] + disp
 }
 
+/*
+ * Gets the row of a peg based on the peg's number
+ */
 func GetRow(currentPeg int) int {
 	var i int
 	for i = 0; TOTAL_PEGS_TABLE[i] <= currentPeg; i++ {
@@ -78,10 +84,16 @@ func GetRow(currentPeg int) int {
 	return i - 1
 }
 
+/*
+ * Get's the displacement within of a peg within a row based on the peg's number
+ */
 func GetDisplacement(currentPeg int) int {
 	return currentPeg - TOTAL_PEGS_TABLE[GetRow(currentPeg)]
 }
 
+/*
+ * Applies a move onto the board
+ */
 func ApplyMove(game *boardState, from, to, jump int) {
 	game.board[from] = false
 	game.board[to] = true
@@ -94,6 +106,9 @@ func ApplyMove(game *boardState, from, to, jump int) {
 	game.currMoves.Push(move)
 }
 
+/*
+ * Reverses a move on the board
+ */
 func ReverseMove(game *boardState, from, to, jump int) {
 	game.board[from] = true
 	game.board[to] = false
@@ -103,6 +118,9 @@ func ReverseMove(game *boardState, from, to, jump int) {
 	game.currMoves.Pop()
 }
 
+/*
+ * Tests if a move is valid
+ */
 func TestMove(game *boardState, from, to, jump int) bool {
 	lr := GetRow(to)
 	if lr < 0 || lr >= game.rows {
@@ -119,6 +137,9 @@ func TestMove(game *boardState, from, to, jump int) bool {
 
 }
 
+/*
+ * Tests a move and applies it.
+ */
 func TestAndApply(game *boardState, from, to, jump int) bool {
 	if TestMove(game, from, to, jump) {
 		ApplyMove(game, from, to, jump)
@@ -128,7 +149,9 @@ func TestAndApply(game *boardState, from, to, jump int) bool {
 	}
 	return false
 }
-
+/*
+ * Tests and applies all possible moves givesn a peg.
+ */
 func TestNeighborMoves(game *boardState, currentPeg int) bool {
 	validMove := false
 
@@ -163,6 +186,9 @@ func TestNeighborMoves(game *boardState, currentPeg int) bool {
 	return validMove
 }
 
+/*
+ * Recursively solves a board
+ */
 func RecursiveSolve(game *boardState) {
 	//fmt.Println("pegsLeft = ", game.pegsLeft)
 	//fmt.Println("currentBest = ", game.currentBest)
@@ -180,6 +206,9 @@ func RecursiveSolve(game *boardState) {
 	}
 }
 
+/*
+ * Solves a board given the initial state of the board.
+ */
 func Solve(game *boardState, status chan int) {
 
 	RecursiveSolve(game)
@@ -192,6 +221,7 @@ func usage() {
 }
 
 func main() {
+	// Evaluate Command Line Arguments
 	args := os.Args[1:]
 
 	if len(args) != 2 {
@@ -218,6 +248,7 @@ func main() {
 		os.Exit(1)
 	}
 
+	// Parallelize start states
 	totalPegs := (rows * (rows + 1)) / 2
 	rowsToCheck := (rows / 2) + 1
 	pegsToCheck := (rowsToCheck * (rowsToCheck + 1)) / 2
@@ -245,10 +276,12 @@ func main() {
 		go Solve(&boards[i], status)
 	}
 
+	// Wait for all thingies to finish
 	for i := 0; i < pegsToCheck; i++ {
 		<-status
 	}
 
+	// Find worst result
 	var best int = 0
 	for i := 0; i < pegsToCheck; i++ {
 		if boards[i].currentBest > boards[best].currentBest {
@@ -262,6 +295,7 @@ func main() {
 		correctMoves.Push(d)
 	}
 
+	// Print out worst results ever
 	fmt.Println((best + 1), correctMoves.Length())
 	for !correctMoves.IsEmpty() {
 		d, _ := correctMoves.Pop()

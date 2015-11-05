@@ -207,7 +207,7 @@ solve n =
 
 
 showMoves :: (Int, Int) -> String
-showMoves (a, b) = "(" ++ show a ++ ", " ++ show b ++ ")"
+showMoves (a, b) = "(" ++ show (a+1) ++ ", " ++ show (b+1) ++ ")"
 
 main = do
     n <- getArgs

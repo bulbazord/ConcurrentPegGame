@@ -1,0 +1,11 @@
+To build:
+
+./build.sh
+
+To run:
+
+./ConcurrentPegGame -s <rows>
+
+To clean:
+
+./build clean
